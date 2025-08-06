@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:password@db:5432/vitalsync
+      - FIREBASE_CREDENTIALS_PATH=/app/vitalsync.json
+      - SECRET_KEY=your-secret-key
+      - APP_ENV=production
+    volumes:
+      - ./vitalsync.json:/app/vitalsync.json
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=vitalsync
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
